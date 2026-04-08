@@ -63,7 +63,7 @@ export default function ProductForm() {
   };
 
   return (
-    <div className="w-full h-screen bg-[#f8f9fa] p-2 md:p-4 font-sans overflow-hidden flex flex-col justify-center">
+    <div className="w-full min-h-screen bg-[#f8f9fa] p-2 md:p-4 font-sans overflow-y-auto">
       
       <div className="max-w-7xl mx-auto w-full bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         

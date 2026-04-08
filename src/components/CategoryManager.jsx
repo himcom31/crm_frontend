@@ -174,7 +174,7 @@ export default function CategoryManager() {
                       </div>
                       <button 
                         onClick={() => handleDelete(cat.name)}
-                        className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl opacity-0 group-hover:opacity-100 transition-all transform group-hover:scale-110"
+                        className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl opacity-100 md:opacity-0 group-hover:opacity-100 transition-all transform group-hover:scale-110"
                         title="Delete Category"
                       >
                         <Trash2 size={18} />

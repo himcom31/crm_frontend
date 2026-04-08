@@ -123,7 +123,7 @@ export default function AgentList() {
               className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all relative flex flex-col justify-between min-h-[190px]"
             >
               {/* Floating Actions on Hover */}
-              <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+              <div className=" absolute top-4 right-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 ">
                 <button 
                   onClick={(e) => openEdit(e, agent)}
                   className="p-2 bg-blue-50 text-blue-500 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-sm"

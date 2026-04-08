@@ -141,7 +141,7 @@ export default function ProductList() {
             <div key={currentId} className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all relative flex flex-col justify-between min-h-[220px]">
               
               {!isEditing && (
-                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                <div className="absolute top-4 right-4 flex gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                   <button onClick={() => startEdit(p)} className="p-2 bg-blue-50 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-all shadow-sm"><Edit3 size={14}/></button>
                   <button onClick={() => deleteProduct(currentId)} className="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all shadow-sm"><Trash2 size={14}/></button>
                 </div>

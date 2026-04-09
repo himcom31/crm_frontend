@@ -13,6 +13,7 @@ import AgentList from "../components/AgentList";
 import CategoryManager from "../components/CategoryManager";
 import Sales from "../components/Sales";
 import SalesList from "../components/SalesList";
+import Dashboard from "../components/DashboardLayout";
 
 export default function AdminDashboard() {
   const location = useLocation();
@@ -69,6 +70,8 @@ export default function AdminDashboard() {
                 {/* Sales */}
                 <Route path="sales/add" element={<Sales />} />
                 <Route path="sales/history" element={<SalesList />} />
+
+                <Route path="dash/main" element={<Dashboard/>}/>
 
                 {/* Default Redirect */}
                 <Route path="/" element={<Navigate to="clients/view" replace />} />

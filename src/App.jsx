@@ -8,6 +8,8 @@ import LoginPage from "./pages/LoginPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import ClientDashboard from "./pages/ClientDashboard";
 import Notifications from "./components/Notifications";
+import ProfilePage from "./pages/ProfilePage";
+import ClientLayout from "./components/ClientLayout";
 
 // ✅ Protected Route
 const ProtectedRoute = ({ children, role }) => {
@@ -31,6 +33,14 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        {/* <Route path="/client/profile" element={<ProfilePage/>}/> */}
+  <Route path="/client" element={<ClientLayout />}>
+          {/* Ye saare pages Navbar ke niche khulenge */}
+          <Route index element={<ClientDashboard />} /> {/* /client */}
+          <Route path="profile" element={<ProfilePage />} /> {/* /client/profile */}
+          {/* Aap aur bhi pages yahan add kar sakte hain */}
+        </Route>
+        
 
         <Route
           path="/admin/*"

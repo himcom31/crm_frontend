@@ -69,10 +69,10 @@ export default function AdminSidebar() {
         <div className="flex-1 overflow-y-auto py-6 px-3 space-y-2 custom-scrollbar overflow-x-hidden">
           
           <SidebarItem 
-            to="/admin/dashboard" 
+            to="/admin/dash/main" 
             icon={<LayoutDashboard size={20}/>} 
             label="Dashboard" 
-            active={isActive("/admin/dashboard")} 
+            active={isActive("/admin/dash/main")} 
             collapsed={isCollapsed} 
           />
 

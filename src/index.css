@@ -55,6 +55,12 @@
 
 body {
   margin: 0;
+font-family: Verdana, Tahoma, Geneva, sans-serif !important;
+  letter-spacing: -0.01em; /* Thoda gap kam karne ke liye */}
+
+p, h1, h2, h3, span, div {
+  font-family: Verdana, Tahoma, Geneva, sans-serif !important;
+  letter-spacing: -0.01em; /* Thoda gap kam karne ke liye */
 }
 
 #root {
@@ -73,6 +79,7 @@ h1, h2 {
   color: #000000;    /* 🔥 Fix: Ab ye hamesha Pure Black rahega */
 }
 
+
 h1 {
   font-size: 56px;
   font-weight: 900;  /* Thoda extra bold look ke liye */
@@ -85,12 +92,21 @@ h2 {
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
+
   @media (max-width: 1024px) {
     font-size: 20px;
+    
   }
 }
+h3{
+
+
+}
+/* index.css */
 p {
-  margin: 0;
+  
+  
+
 }
 
 code,
@@ -123,4 +139,14 @@ code {
     radial-gradient(at 100% 100%, rgb(38, 37, 37) 0, transparent 50%);
 
   background-attachment: fixed;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

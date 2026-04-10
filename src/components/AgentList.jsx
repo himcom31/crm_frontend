@@ -3,10 +3,11 @@ import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import {
   Search, UserCheck, Mail, Phone, Trash2, Edit3,
-  ShieldCheck, Plus, AlertCircle, Briefcase, X
+  ShieldCheck, Plus, AlertCircle, Briefcase, X, Download
 } from "lucide-react";
 import { Link } from "react-router-dom";
 const API_BASE = import.meta.env.VITE_API_URL;
+import * as XLSX from 'xlsx';
 
 export default function AgentList() {
   const { addNotification } = useContext(AppContext);
@@ -68,17 +69,37 @@ export default function AgentList() {
     a.email?.toLowerCase().includes(search.toLowerCase())
   ) : [];
 
+  const exportToExcel = () => {
+    if (agents.length === 0) {
+      alert("No any client!");
+      return;
+    }
+
+    const excelData = agents.map((agent, index) => ({
+      "S.No": index + 1,
+      "Agent Name": agent.name,
+      "Email": agent.email,
+      "Mobile": agent.phone,
+      "Role": agent.role,
+      "status": agent.status,
+      "Emr Pho.": agent.Emr_phone,
+
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Agents");
+    XLSX.writeFile(workbook, `Hexile_Agents_${new Date().toLocaleDateString()}.xlsx`);
+  };
+
   return (
     <div className="w-full min-h-screen bg-[#f8f9fa] p-4 md:p-8 font-sans">
-      
+
       {/* --- 1. TOP BREADCRUMB NAV --- */}
       <div className="w-full flex items-center justify-between mb-8 px-2">
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          <span className="opacity-50 uppercase text-[10px] font-black tracking-widest">Pages</span> / 
-          <span className="font-bold text-slate-800 text-base">Agent Registry</span>
-        </div>
-        <Link 
-          to="/admin/agents/add" 
+        <Link
+          to="/admin/agents/add"
           className="flex items-center gap-2 bg-[#2dce89] text-white px-5 py-2.5 rounded-lg font-bold text-xs shadow-md hover:shadow-lg transition-all active:scale-95 uppercase tracking-wider"
         >
           <Plus size={16} strokeWidth={3} /> Add Agent
@@ -107,30 +128,37 @@ export default function AgentList() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+
+        <button
+          onClick={exportToExcel}
+          className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-2xl transition-all font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-100 active:scale-95 whitespace-nowrap"
+        >
+          <Download size={16} /> Export Agents (.xlsx)
+        </button>
       </div>
 
       {/* --- 3. AGENT CARDS GRID --- */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
-           <div className="h-10 w-10 border-4 border-slate-100 border-t-[#2dce89] rounded-full animate-spin"></div>
-           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Synchronizing Records...</p>
+          <div className="h-10 w-10 border-4 border-slate-100 border-t-[#2dce89] rounded-full animate-spin"></div>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Synchronizing Records...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
           {filteredAgents.map((agent) => (
-            <div 
+            <div
               key={agent.email}
               className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all relative flex flex-col justify-between min-h-[190px]"
             >
               {/* Floating Actions on Hover */}
               <div className=" absolute top-4 right-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 ">
-                <button 
+                <button
                   onClick={(e) => openEdit(e, agent)}
                   className="p-2 bg-blue-50 text-blue-500 rounded-lg hover:bg-blue-600 hover:text-white transition-all shadow-sm"
                 >
                   <Edit3 size={14} />
                 </button>
-                <button 
+                <button
                   onClick={(e) => deleteAgent(e, agent.email)}
                   className="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-600 hover:text-white transition-all shadow-sm"
                 >
@@ -147,17 +175,16 @@ export default function AgentList() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="text-lg font-bold text-[#344767] truncate leading-tight">{agent.name}</h3>
-                    <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-tighter ${
-                      agent.status === 'Active' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
-                    }`}>
+                    <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-tighter ${agent.status === 'Active' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+                      }`}>
                       {agent.status}
                     </span>
                   </div>
-                  
+
                   <p className="text-[#67748e] text-[10px] font-black mb-3 flex items-center gap-1 opacity-70 uppercase tracking-widest">
                     <Briefcase size={12} /> {agent.role}
                   </p>
-                  
+
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-[11px] text-slate-500 font-bold">
                       <Mail size={12} className="text-slate-300 shrink-0" />
@@ -197,15 +224,15 @@ export default function AgentList() {
           <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-6 border-b border-slate-50 flex justify-between items-center bg-[#f8f9fa]">
               <h2 className="text-xl font-black text-[#344767]">Update Profile</h2>
-              <button 
-                onClick={() => setIsEditOpen(false)} 
+              <button
+                onClick={() => setIsEditOpen(false)}
                 className="p-2 hover:bg-white rounded-full transition-colors text-slate-400"
               >
-                <X size={20}/>
+                <X size={20} />
               </button>
             </div>
-            
-            <form 
+
+            <form
               onSubmit={async (e) => {
                 e.preventDefault();
                 try {
@@ -216,23 +243,23 @@ export default function AgentList() {
                   fetchAgents();
                   setIsEditOpen(false);
                 } catch (err) { addNotification("❌ Update Failed"); }
-              }} 
+              }}
               className="p-6 space-y-4"
             >
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-black text-black uppercase ml-1">Agent Name</label>
-                <input 
-                  value={selectedAgent.name} 
-                  onChange={(e) => setSelectedAgent({...selectedAgent, name: e.target.value})}
+                <input
+                  value={selectedAgent.name}
+                  onChange={(e) => setSelectedAgent({ ...selectedAgent, name: e.target.value })}
                   className="w-full p-3 bg-[#f8f9fa] border border-slate-200 rounded-xl text-sm font-bold text-slate-700 outline-none focus:border-[#2dce89]"
                 />
               </div>
 
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-black text-black uppercase ml-1">Contact Phone</label>
-                <input 
-                  value={selectedAgent.phone} 
-                  onChange={(e) => setSelectedAgent({...selectedAgent, phone: e.target.value})}
+                <input
+                  value={selectedAgent.phone}
+                  onChange={(e) => setSelectedAgent({ ...selectedAgent, phone: e.target.value })}
                   className="w-full p-3 bg-[#f8f9fa] border border-slate-200 rounded-xl text-sm font-bold text-slate-700 outline-none focus:border-[#2dce89]"
                 />
               </div>
@@ -240,9 +267,9 @@ export default function AgentList() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-black text-black uppercase ml-1">Role</label>
-                  <select 
-                    value={selectedAgent.role} 
-                    onChange={(e) => setSelectedAgent({...selectedAgent, role: e.target.value})}
+                  <select
+                    value={selectedAgent.role}
+                    onChange={(e) => setSelectedAgent({ ...selectedAgent, role: e.target.value })}
                     className="p-3 bg-[#f8f9fa] border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none"
                   >
                     <option value="Sales Agent">Sales Agent</option>
@@ -252,9 +279,9 @@ export default function AgentList() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-black text-black uppercase ml-1">Status</label>
-                  <select 
-                    value={selectedAgent.status} 
-                    onChange={(e) => setSelectedAgent({...selectedAgent, status: e.target.value})}
+                  <select
+                    value={selectedAgent.status}
+                    onChange={(e) => setSelectedAgent({ ...selectedAgent, status: e.target.value })}
                     className="p-3 bg-[#f8f9fa] border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none"
                   >
                     <option value="Active">Active</option>

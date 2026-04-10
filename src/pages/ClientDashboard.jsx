@@ -111,7 +111,7 @@ export default function App() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {[
             { title: 'Total Portfolio', value: `₹${totalInvestment.toLocaleString('en-IN')}`, icon: Wallet, color: 'text-indigo-400', label: 'Balance' },
-            { title: 'Active Nodes', value: activeAssets, icon: Activity, color: 'text-emerald-400', label: 'Positions' },
+            { title: 'Active Assets', value: activeAssets, icon: Activity, color: 'text-emerald-400', label: 'Positions' },
             { title: 'Next Expiry', value: sales.length > 0 ? new Date(sales[0].expiryDate).toLocaleDateString('en-GB') : 'N/A', icon: Clock, color: 'text-fuchsia-400', label: 'Upcoming' },
           ].map((card, idx) => (
             <motion.div key={idx} variants={itemVariants} whileHover={{ y: -8 }} className="relative bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl overflow-hidden group">
@@ -151,7 +151,7 @@ export default function App() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-[2.5rem] border border-white/10 p-8 text-white relative shadow-2xl overflow-hidden">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] mb-8 text-indigo-400">Global Ledger</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] mb-8 text-indigo-400">Latest Assets</h3>
             <div className="space-y-6">
               {sales.slice(0, 5).map((item, i) => (
                 <div key={i} className="flex items-center justify-between group">

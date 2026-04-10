@@ -3,9 +3,11 @@ import axios from "axios";
 import { 
   History, Search, IndianRupee, Users, 
   TrendingUp, Calendar, Package, ArrowUpRight, 
-  ShieldCheck, Filter 
+  ShieldCheck, Filter ,Download
 } from "lucide-react";
 const API_BAS = import.meta.env.VITE_API_URL;
+import * as XLSX from 'xlsx';
+
 
 export default function SalesHistory() {
   const [sales, setSales] = useState([]);
@@ -43,6 +45,35 @@ export default function SalesHistory() {
   // Totals Calculation
   const totalBusiness = filteredSales.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0);
   const totalCommission = filteredSales.reduce((acc, curr) => acc + (curr.commissionAmount || 0), 0);
+
+const exportToExcel = () => {
+    if (sales.length === 0) {
+      alert("No transaction data available to export!");
+      return;
+    }
+
+    // 1. Prepare formatted data for Excel
+    const excelData = filteredSales.map((sale, index) => ({
+      "S.No": index + 1,
+      "Transaction ID": sale._id.toUpperCase(),
+      "Date": new Date(sale.investmentDate).toLocaleDateString('en-IN'),
+      "Investor Name": sale.client?.name || "N/A",
+      "Investor Email": sale.client?.email || "N/A",
+      "Product Name": sale.product?.name || "Multiple Products",
+      "Total Investment": sale.totalAmount || 0,
+      "Authorized Agent": sale.agent?.name || "N/A",
+      "Commission (%)": sale.commissionPercentage || sale.commissionLabel || 0,
+      "Payout Amount": sale.commissionAmount || 0,
+    }));
+
+    // 2. Create worksheet and workbook
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sales History");
+
+    // 3. Download the file
+    XLSX.writeFile(workbook, `Sales_History_${new Date().toLocaleDateString()}.xlsx`);
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#f8f9fa] p-4 md:p-8 font-sans">
@@ -102,6 +133,13 @@ export default function SalesHistory() {
               onChange={(e) => setSearch(e.target.value)}
             />
          </div>
+
+         <button 
+              onClick={exportToExcel}
+              className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3.5 rounded-2xl transition-all font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-100 active:scale-95 whitespace-nowrap"
+            >
+              <Download size={16} /> Export CSV
+            </button>
       </div>
 
       {/* --- DATA TABLE CARD --- */}
